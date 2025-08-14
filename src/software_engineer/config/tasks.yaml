@@ -1,0 +1,116 @@
+design_architecture:
+  description: >
+    Design a complete, runnable Java/JavaFX Messenger application. Deliver:
+    - Multi-module Maven structure: shared, server, client with coordinates and Java 21 toolchain.
+    - API contracts: REST endpoints (auth) and WebSocket message schemas (send/receive, acks, presence).
+    - Data model and schema for SQLite, migration plan (Flyway), and repository interfaces.
+    - Security approach: JWT, bcrypt, TLS guidance, input validation, rate limiting.
+    - Implementation plan: milestones, tasks for backend, frontend, and testing.
+    Provide a concise but complete architecture doc and directory layout.
+  expected_output: >
+    ARCHITECTURE.md containing module layout, key classes/interfaces, endpoints, message schemas,
+    database schema, and a step-by-step implementation plan.
+  agent: backend_engineer
+
+ingest_project_doc:
+  description: >
+    Read and summarize the project's PDF documentation to extract requirements, constraints,
+    domain entities, UI expectations, and any provided protocols or schemas. Use the PDF tool
+    if available. The PDF path should be provided via the environment variable PROJECT_PDF.
+    Produce a concise but comprehensive summary and an action checklist for the engineering team.
+  expected_output: >
+    PROJECT_SUMMARY.md containing key requirements, constraints, data model hints, and a prioritized
+    checklist for implementation.
+  agent: backend_engineer
+
+implement_backend:
+  description: >
+    Implement the server module according to ARCHITECTURE.md:
+    - REST auth with JWT issuance/verification, registration with bcrypt.
+    - WebSocket messaging with per-user channels, message history persistence, read receipts.
+    - SQLite persistence with DAO/service layers and Flyway migrations.
+    - Config via environment/properties, structured logging, graceful shutdown.
+    Include a README with run commands and example requests.
+  expected_output: >
+    A `server/` Maven module compiling successfully with working endpoints and WebSocket handler,
+    plus unit tests for services and repositories.
+  agent: backend_engineer
+
+design_database:
+  description: >
+    Design and implement the database layer: schema, migrations, and performance. Deliver:
+    - ER model, DDL for SQLite (and notes for Postgres), indexes, constraints, and migration scripts (Flyway).
+    - DAO/repository interfaces and transaction patterns. Data retention and backup notes.
+  expected_output: >
+    DB_DESIGN.md, Flyway migration scripts, and repository interfaces ready for server integration.
+  agent: database_engineer
+
+implement_client:
+  description: >
+    Implement the JavaFX client module:
+    - Login/register flows, contact list, conversations view, message bubbles with timestamps and status.
+    - REST client for auth and discovery; WebSocket client for real-time messaging with reconnect and queueing.
+    - Local cache for recent messages; polished UI and responsive layout.
+    - Maven configuration with javafx-maven-plugin and packaging instructions.
+  expected_output: >
+    A `client/` Maven module that runs a desktop app connecting to the server and supports sending/receiving messages.
+  agent: frontend_engineer
+
+design_ux:
+  description: >
+    Create UX flows and wireframes guiding JavaFX UI design. Include accessibility and responsiveness guidance,
+    and a checklist for visual polish and usability testing.
+  expected_output: >
+    UX_SPEC.md with flows, components, wireframes (ASCII or described), and acceptance criteria.
+  agent: ux_designer
+
+write_tests:
+  description: >
+    Ensure quality with a comprehensive test strategy and implementation:
+    - Server: JUnit 5 unit tests for services, DAO layer tests with SQLite (transactional),
+      integration tests for auth and messaging endpoints; optional Testcontainers for parity.
+    - Client: Smoke tests and component tests plan (TestFX), mock server strategy for deterministic runs.
+    - CI hooks: Maven Surefire/Failsafe configuration, coverage target, and how to run tests locally and in CI.
+    Provide testing utilities and fixtures that are easy to adopt, with clear documentation.
+  expected_output: >
+    Tests under `server/src/test/java` and `client/src/test/java` with a short TESTING.md explaining how to run.
+  agent: test_engineer
+
+containerize_app:
+  description: >
+    Create Docker containers and deployment infrastructure:
+    - Multi-stage Dockerfile for Java server with JRE, optimized layers, health checks.
+    - JavaFX client container (if needed) or standalone JAR packaging.
+    - docker-compose.yml for local development with database and server.
+    - Deployment scripts and environment configuration.
+  expected_output: >
+    Dockerfiles, docker-compose.yml, deployment scripts, and CONTAINER_README.md with run instructions.
+  agent: devops_engineer
+
+evaluate_and_feedback:
+  description: >
+    Analyze the entire project delivery and provide feedback for model improvement:
+    - Code quality metrics: test coverage, complexity, maintainability scores.
+    - Performance analysis: build times, runtime performance, resource usage.
+    - Architecture review: adherence to design, scalability, security considerations.
+    - Generate feedback report with specific improvement recommendations.
+  expected_output: >
+    EVALUATION_REPORT.md with metrics, analysis, and actionable feedback for future iterations.
+  agent: evaluation_analyst
+
+dynamic_features:
+  description: >
+    After ingesting the PDF and producing ARCHITECTURE.md, identify non-critical features (e.g., emojis,
+    message reactions, message search, themes) and plan/assign them dynamically. Create tasks/playbooks
+    for these features and prioritize them for later sprints without blocking the core MVP.
+  expected_output: >
+    DYNAMIC_FEATURES.md with prioritized backlog, proposed agents or roles, and task breakdowns.
+  agent: evaluation_analyst
+
+package_and_run:
+  description: >
+    Provide end-to-end build and run instructions: start the server, run the client, and validate messaging works.
+    Include packaging steps for distribution and notes for macOS codesign if applicable.
+  expected_output: >
+    BUILD_AND_RUN.md with exact Maven commands and any required environment variables.
+  agent: devops_engineer
