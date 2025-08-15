@@ -1,116 +1,658 @@
-design_architecture:
+ingest_requirements:
   description: >
-    Design a complete, runnable Java/JavaFX Messenger application. Deliver:
-    - Multi-module Maven structure: shared, server, client with coordinates and Java 21 toolchain.
-    - API contracts: REST endpoints (auth) and WebSocket message schemas (send/receive, acks, presence).
-    - Data model and schema for SQLite, migration plan (Flyway), and repository interfaces.
-    - Security approach: JWT, bcrypt, TLS guidance, input validation, rate limiting.
-    - Implementation plan: milestones, tasks for backend, frontend, and testing.
-    Provide a concise but complete architecture doc and directory layout.
+    **PHASE 1: REQUIREMENTS ANALYSIS & DOCUMENT INGESTION**
+    
+    Conduct comprehensive analysis of all available project documentation and extract detailed requirements:
+    
+    **Document Analysis:**
+    - Read PROJECT_PDF if available via environment variable PROJECT_PDF
+    - Analyze knowledge/user_preference.txt for user context and preferences
+    - Review any existing specifications, constraints, or documentation
+    - Parse user stories and acceptance criteria from available sources
+    
+    **Requirements Extraction:**
+    - Functional requirements: Core features, user actions, system behaviors
+    - Non-functional requirements: Performance, security, usability, scalability
+    - Technical constraints: Platform requirements, technology limitations, integration needs
+    - Business rules: Validation requirements, workflow constraints, compliance needs
+    - Success criteria: Measurable outcomes, acceptance criteria, quality gates
+    
+    **Domain Modeling:**
+    - Identify core entities, relationships, and data flows
+    - Map user journeys and interaction patterns
+    - Document business logic and validation rules
+    - Define system boundaries and external interfaces
+    
+    **Risk and Gap Analysis:**
+    - Identify technical risks and mitigation strategies
+    - Flag ambiguous, incomplete, or conflicting requirements
+    - Highlight critical dependencies and assumptions
+    - Assess feasibility and complexity of requirements
+    
+    This analysis serves as the foundation for all subsequent architecture and implementation decisions.
+
   expected_output: >
-    ARCHITECTURE.md containing module layout, key classes/interfaces, endpoints, message schemas,
-    database schema, and a step-by-step implementation plan.
+    **REQUIREMENTS.md** containing:
+    - Executive summary with project vision and goals
+    - Comprehensive functional requirements with user stories
+    - Detailed non-functional requirements and quality attributes  
+    - Technical constraints and platform requirements
+    - Domain model with entities, relationships, and workflows
+    - User personas and journey mapping
+    - Risk assessment matrix with mitigation strategies
+    - Success criteria and acceptance testing approach
+    - Assumptions, dependencies, and open questions
+    - Requirements traceability matrix template
+
+  agent: document_analyst
+
+design_system_architecture:
+  description: >
+    **PHASE 2: SYSTEM ARCHITECTURE DESIGN**
+    
+    Design comprehensive system architecture based on analyzed requirements:
+    
+    **High-Level Architecture:**
+    - System overview with component interaction diagrams
+    - Technology stack selection and justification
+    - Deployment architecture and infrastructure requirements
+    - Integration points and external system interfaces
+    
+    **Module Structure Design:**
+    - Multi-module Maven project organization (shared, server, client)
+    - Package structure and dependency management strategy
+    - Module boundaries and API contracts
+    - Build configuration and toolchain setup
+    
+    **API Specifications:**
+    - REST endpoint definitions with request/response schemas
+    - WebSocket message protocols and event handling
+    - Data transfer objects (DTOs) and serialization formats
+    - Error handling strategies and response codes
+    - API versioning and backward compatibility approach
+    
+    **Security Architecture:**
+    - Authentication and authorization flow design
+    - JWT token management and validation strategy
+    - Data encryption and protection mechanisms
+    - Input validation and sanitization approaches
+    - Security best practices and threat mitigation
+    
+    **Implementation Planning:**
+    - Development phases with clear milestones
+    - Task breakdown and team responsibility matrix
+    - Critical path analysis and dependency management
+    - Resource allocation and timeline estimation
+    - Integration strategy and testing approach
+
+  expected_output: >
+    **ARCHITECTURE.md** containing:
+    - System architecture diagrams and component overview
+    - Complete module structure with Maven coordinates and dependencies
+    - Detailed API specifications (REST endpoints + WebSocket protocols)
+    - Security architecture with authentication/authorization flows
+    - Database integration strategy and transaction management
+    - Build and deployment configuration guidelines
+    - Phase-by-phase implementation roadmap with milestones
+    - Integration testing strategy and acceptance criteria
+    - Performance and scalability considerations
+    - Technology decision rationale and alternatives considered
+
   agent: backend_engineer
 
-ingest_project_doc:
+validate_architecture:
   description: >
-    Read and summarize the project's PDF documentation to extract requirements, constraints,
-    domain entities, UI expectations, and any provided protocols or schemas. Use the PDF tool
-    if available. The PDF path should be provided via the environment variable PROJECT_PDF.
-    Produce a concise but comprehensive summary and an action checklist for the engineering team.
-  expected_output: >
-    PROJECT_SUMMARY.md containing key requirements, constraints, data model hints, and a prioritized
-    checklist for implementation.
-  agent: backend_engineer
+    **QUALITY GATE: ARCHITECTURE VALIDATION & APPROVAL**
+    
+    Conduct comprehensive review of proposed system architecture:
+    
+    **Requirements Alignment:**
+    - Verify all functional requirements are addressed in architecture
+    - Validate non-functional requirements can be achieved
+    - Check for missing components or architectural gaps
+    - Ensure success criteria are measurable and achievable
+    
+    **Technical Architecture Review:**
+    - Assess technology choices and their appropriateness
+    - Review scalability, performance, and security considerations
+    - Evaluate maintainability, extensibility, and technical debt risks
+    - Validate integration complexity and external dependencies
+    
+    **Implementation Feasibility:**
+    - Review development timeline and resource requirements
+    - Assess team capabilities and skill gap analysis
+    - Identify potential technical blockers and mitigation strategies
+    - Validate build, test, and deployment strategy feasibility
+    
+    **Risk Assessment:**
+    - Identify architectural risks and mitigation plans
+    - Evaluate single points of failure and resilience
+    - Review security vulnerabilities and protection measures
+    - Assess operational complexity and monitoring requirements
+    
+    **Quality Standards Compliance:**
+    - Check adherence to coding standards and best practices
+    - Validate testing strategy and coverage requirements
+    - Review documentation completeness and clarity
+    - Ensure accessibility and usability considerations
+    
+    **CRITICAL DECISION POINT:** This task must provide a clear GO/NO-GO decision with detailed rationale.
 
-implement_backend:
-  description: >
-    Implement the server module according to ARCHITECTURE.md:
-    - REST auth with JWT issuance/verification, registration with bcrypt.
-    - WebSocket messaging with per-user channels, message history persistence, read receipts.
-    - SQLite persistence with DAO/service layers and Flyway migrations.
-    - Config via environment/properties, structured logging, graceful shutdown.
-    Include a README with run commands and example requests.
   expected_output: >
-    A `server/` Maven module compiling successfully with working endpoints and WebSocket handler,
-    plus unit tests for services and repositories.
-  agent: backend_engineer
+    **ARCHITECTURE_REVIEW.md** containing:
+    - Requirements coverage analysis with traceability matrix
+    - Detailed technical architecture assessment and scoring
+    - Risk evaluation matrix with likelihood and impact ratings
+    - Implementation feasibility analysis with resource requirements
+    - Quality standards compliance checklist with pass/fail status
+    - **DECISION: GO/NO-GO with comprehensive rationale and conditions**
+    - Detailed action items for any identified issues or improvements
+    - Stakeholder sign-off requirements and approval criteria
 
-design_database:
+  agent: quality_assurance_agent
+
+design_database_layer:
   description: >
-    Design and implement the database layer: schema, migrations, and performance. Deliver:
-    - ER model, DDL for SQLite (and notes for Postgres), indexes, constraints, and migration scripts (Flyway).
-    - DAO/repository interfaces and transaction patterns. Data retention and backup notes.
+    **PHASE 3A: DATABASE ARCHITECTURE & DATA LAYER DESIGN**
+    
+    Design comprehensive data architecture based on approved system architecture:
+    
+    **Data Model Design:**
+    - Complete Entity-Relationship diagrams with cardinality
+    - Detailed table schemas with columns, data types, and constraints
+    - Primary keys, foreign keys, and referential integrity rules
+    - Index strategy for query performance optimization
+    - Data validation rules and business constraint implementation
+    
+    **Schema Migration Strategy:**
+    - Flyway migration scripts with version control
+    - Schema evolution strategy and backward compatibility
+    - Data seeding scripts for development and testing
+    - Rollback procedures and recovery strategies
+    - Environment-specific configuration management
+    
+    **Data Access Layer:**
+    - Repository pattern interfaces and implementation guidelines
+    - DAO pattern with transaction management strategies
+    - Connection pooling configuration and optimization
+    - Query optimization and performance monitoring
+    - Error handling and logging best practices
+    
+    **Performance & Scalability:**
+    - Database indexing strategy and query optimization
+    - Caching layers and invalidation strategies
+    - Backup and recovery procedures
+    - Performance monitoring and alerting setup
+    - Scalability considerations for future growth
+    
+    **Security & Compliance:**
+    - Data encryption at rest and in transit
+    - Access control and permission management
+    - Audit logging and compliance requirements
+    - Personal data protection and privacy considerations
+
   expected_output: >
-    DB_DESIGN.md, Flyway migration scripts, and repository interfaces ready for server integration.
+    **DATABASE_DESIGN.md** with comprehensive data architecture documentation
+    
+    **Plus database implementation files:**
+    - `/database/migrations/V1__initial_schema.sql` - Complete schema creation
+    - `/database/migrations/V2__seed_data.sql` - Test and demo data
+    - `/database/migrations/V3__indexes_and_constraints.sql` - Performance optimization
+    - Repository interface definitions with method signatures
+    - DAO pattern implementation examples
+    - Database configuration templates for different environments
+    - Performance tuning guidelines and monitoring setup
+    - Backup and recovery procedure documentation
+
   agent: database_engineer
 
-implement_client:
+design_user_experience:
   description: >
-    Implement the JavaFX client module:
-    - Login/register flows, contact list, conversations view, message bubbles with timestamps and status.
-    - REST client for auth and discovery; WebSocket client for real-time messaging with reconnect and queueing.
-    - Local cache for recent messages; polished UI and responsive layout.
-    - Maven configuration with javafx-maven-plugin and packaging instructions.
-  expected_output: >
-    A `client/` Maven module that runs a desktop app connecting to the server and supports sending/receiving messages.
-  agent: frontend_engineer
+    **PHASE 3B: USER EXPERIENCE & INTERFACE DESIGN**
+    
+    Create comprehensive UX design for cross-platform JavaFX desktop application:
+    
+    **User Journey Analysis:**
+    - Complete user flow mapping from onboarding to advanced features
+    - Screen transition diagrams and navigation patterns
+    - Error state handling and recovery user paths
+    - Accessibility considerations and compliance requirements
+    - Cross-platform consistency and platform-specific adaptations
+    
+    **Interface Design Specifications:**
+    - Detailed wireframes for all application screens and dialogs
+    - Component library design with reusable UI elements
+    - Layout specifications with responsive behavior guidelines
+    - Visual hierarchy definition and information architecture
+    - Color schemes, typography, and iconography standards
+    
+    **Interaction Design Patterns:**
+    - User input validation with real-time feedback mechanisms
+    - Loading states, progress indicators, and async operation handling
+    - Keyboard shortcuts and accessibility features for power users
+    - Context menus, tooltips, and help system integration
+    - Notification strategies and alert/confirmation dialog patterns
+    
+    **Usability & Accessibility:**
+    - WCAG 2.1 compliance guidelines and implementation
+    - Keyboard navigation and screen reader compatibility
+    - Cross-platform UX consistency (Windows/macOS/Linux conventions)
+    - Responsive layout handling for different screen sizes
+    - User preference and customization options
+    
+    **JavaFX Implementation Guidelines:**
+    - FXML structure and controller organization patterns
+    - CSS styling approaches and theme management
+    - Scene and stage management best practices
+    - Custom control creation and styling guidelines
+    - Performance considerations for UI rendering and updates
 
-design_ux:
-  description: >
-    Create UX flows and wireframes guiding JavaFX UI design. Include accessibility and responsiveness guidance,
-    and a checklist for visual polish and usability testing.
   expected_output: >
-    UX_SPEC.md with flows, components, wireframes (ASCII or described), and acceptance criteria.
+    **UX_DESIGN.md** containing:
+    - Complete user journey maps with decision points and error paths
+    - Comprehensive wireframes (ASCII art format or detailed descriptions)
+    - Component library specifications with usage guidelines
+    - Detailed interaction patterns and behavior specifications
+    - Accessibility compliance checklist and implementation guide
+    - Cross-platform adaptation guidelines and platform-specific considerations
+    - JavaFX implementation roadmap with technical specifications
+    - Usability testing plan and validation criteria
+    - User feedback collection and iteration strategies
+
   agent: ux_designer
 
-write_tests:
+implement_backend_services:
   description: >
-    Ensure quality with a comprehensive test strategy and implementation:
-    - Server: JUnit 5 unit tests for services, DAO layer tests with SQLite (transactional),
-      integration tests for auth and messaging endpoints; optional Testcontainers for parity.
-    - Client: Smoke tests and component tests plan (TestFX), mock server strategy for deterministic runs.
-    - CI hooks: Maven Surefire/Failsafe configuration, coverage target, and how to run tests locally and in CI.
-    Provide testing utilities and fixtures that are easy to adopt, with clear documentation.
+    **PHASE 4A: BACKEND SERVICES IMPLEMENTATION**
+    
+    Implement complete server-side application according to approved architecture:
+    
+    **Project Foundation:**
+    - Maven multi-module project structure (shared, server modules)
+    - Java 21 configuration with proper toolchain setup
+    - Dependency management and version control strategy
+    - Configuration management (environment variables, properties files)
+    - Logging framework setup (SLF4J + Logback) with structured logging
+    - Application lifecycle management and graceful shutdown
+    
+    **Authentication & Authorization System:**
+    - User registration endpoint with input validation
+    - Login endpoint with credential verification
+    - JWT token generation, validation, and refresh mechanisms
+    - Password hashing with bcrypt and secure password policies
+    - Session management and security context handling
+    - Role-based access control (if required)
+    
+    **Real-time Messaging System:**
+    - WebSocket connection management and user session tracking
+    - Message routing and delivery to connected users
+    - Message persistence with history and retrieval APIs
+    - Delivery receipt and read status tracking
+    - User presence indicators and typing notifications
+    - Connection resilience and reconnection handling
+    
+    **Database Integration:**
+    - HikariCP connection pool configuration
+    - Flyway migration execution and validation
+    - Repository pattern implementation with transaction management
+    - Error handling and database constraint validation
+    - Query optimization and performance monitoring
+    
+    **REST API Implementation:**
+    - User management endpoints (CRUD operations)
+    - Contact management and friend request handling
+    - Message history retrieval with pagination
+    - File upload/download endpoints (if required)
+    - Health check and monitoring endpoints
+    - API documentation generation (OpenAPI/Swagger)
+    
+    **Security & Performance:**
+    - Input validation and sanitization
+    - Rate limiting and DDoS protection
+    - CORS configuration for cross-origin requests
+    - Error handling with proper HTTP status codes
+    - Performance monitoring and metrics collection
+    - Security headers and HTTPS enforcement
+
   expected_output: >
-    Tests under `server/src/test/java` and `client/src/test/java` with a short TESTING.md explaining how to run.
+    **Complete /server Maven module with:**
+    - Fully functional Java 21 Spring Boot or Javalin application
+    - All REST endpoints implemented with comprehensive error handling
+    - WebSocket messaging system with real-time capabilities
+    - Database integration with automated migrations
+    - Comprehensive unit tests achieving >80% code coverage
+    - Integration tests for all major workflows
+    - Detailed README with build, run, and deployment instructions
+    - API documentation with example requests and responses
+    - Performance benchmarks and load testing results
+    - Security audit checklist and compliance validation
+
+  agent: backend_engineer
+
+implement_frontend_application:
+  description: >
+    **PHASE 4B: JAVAFX DESKTOP APPLICATION IMPLEMENTATION**
+    
+    Implement complete JavaFX desktop client according to UX design specifications:
+    
+    **Application Architecture:**
+    - JavaFX Maven module with javafx-maven-plugin configuration
+    - MVC/MVVM architecture implementation with clear separation
+    - Scene and controller organization with proper lifecycle management
+    - Resource management (FXML files, CSS stylesheets, images)
+    - Application state management and data binding patterns
+    - Cross-platform compatibility and platform-specific adaptations
+    
+    **User Interface Implementation:**
+    - Login and registration screens with validation feedback
+    - Main application window with responsive navigation
+    - Chat interface with message bubbles and timestamps
+    - Contact list with search and filtering capabilities
+    - Conversation history with scrolling and lazy loading
+    - Settings and preferences dialog with user customization
+    - About dialog and help system integration
+    
+    **Networking & Communication:**
+    - HTTP client for REST API communication (authentication, user management)
+    - WebSocket client for real-time messaging with automatic reconnection
+    - Message queuing for offline scenarios and connection failures
+    - Background threading for network operations to maintain UI responsiveness
+    - Connection status indicators and error handling
+    - Local message caching and synchronization
+    
+    **Data Management:**
+    - Local SQLite database for message caching and offline access
+    - User preferences and application settings persistence
+    - Message search functionality with indexing
+    - Data synchronization between local cache and server
+    - Conflict resolution for offline/online data discrepancies
+    
+    **User Experience Features:**
+    - Responsive layout with window resize handling
+    - Keyboard shortcuts and accessibility features
+    - Loading states and progress indicators
+    - Toast notifications and system tray integration
+    - Theme support and customization options
+    - Multi-language support framework (i18n)
+    
+    **Cross-Platform Packaging:**
+    - Native installer generation for Windows (MSI), macOS (DMG), Linux (DEB/RPM)
+    - Application icon and metadata configuration
+    - Code signing setup for trusted distribution
+    - Auto-update mechanism and version checking
+    - Crash reporting and error logging
+
+  expected_output: >
+    **Complete /client Maven module with:**
+    - Fully functional JavaFX desktop application
+    - All UI screens implemented per UX design specifications
+    - Real-time messaging with offline capability and sync
+    - Local data persistence and caching system
+    - Cross-platform native installer packages
+    - Comprehensive JavaFX component tests using TestFX
+    - User acceptance testing scenarios and validation
+    - Detailed user manual and installation guide
+    - Performance optimization and memory usage analysis
+    - Accessibility compliance validation and testing
+
+  agent: frontend_engineer
+
+implement_testing_strategy:
+  description: >
+    **PHASE 5: COMPREHENSIVE TESTING IMPLEMENTATION**
+    
+    Develop and implement thorough testing strategy across all system components:
+    
+    **Backend Testing Suite:**
+    - Unit tests for all service classes, repositories, and utilities
+    - Integration tests for REST endpoints with MockMvc or TestContainers
+    - WebSocket integration tests with embedded test server
+    - Database integration tests with transactional rollback
+    - Security tests for authentication and authorization flows
+    - Performance tests with load simulation and benchmarking
+    - API contract tests ensuring backward compatibility
+    
+    **Frontend Testing Suite:**
+    - JavaFX component unit tests with mocked dependencies
+    - UI integration tests using TestFX framework
+    - User workflow scenario tests simulating real usage patterns
+    - Mock server tests for network layer validation
+    - Cross-platform compatibility tests on different OS
+    - Accessibility tests for keyboard navigation and screen readers
+    - Performance tests for UI responsiveness and memory usage
+    
+    **System Integration Testing:**
+    - End-to-end integration tests with full system deployment
+    - Multi-user scenario tests with concurrent connections
+    - Network failure and resilience testing
+    - Data consistency and synchronization validation
+    - Security penetration testing and vulnerability assessment
+    - Performance and load testing under realistic conditions
+    - Deployment and configuration testing across environments
+    
+    **Test Infrastructure & Automation:**
+    - CI/CD pipeline integration with automated test execution
+    - Test data management and cleanup strategies
+    - Code coverage analysis with quality gates (>80% target)
+    - Test result reporting and failure notification
+    - Performance regression detection and baseline management
+    - Automated security scanning and vulnerability detection
+    
+    **Quality Assurance Processes:**
+    - Test planning and execution documentation
+    - Bug tracking and resolution workflows
+    - Acceptance testing criteria and sign-off procedures
+    - User acceptance testing coordination and feedback collection
+    - Performance benchmarking and optimization recommendations
+    - Security audit and compliance validation
+
+  expected_output: >
+    **TESTING_STRATEGY.md** with comprehensive testing documentation
+    
+    **Plus complete test implementation:**
+    - Server module tests achieving >80% code coverage
+    - Client module tests with UI and integration scenarios
+    - End-to-end system tests validating all workflows
+    - Performance benchmarks and load testing results
+    - Security audit report with vulnerability assessment
+    - CI/CD pipeline configuration with automated testing
+    - Test execution guides and troubleshooting documentation
+    - Quality metrics dashboard and reporting templates
+    - User acceptance testing plan and validation criteria
+
   agent: test_engineer
 
-containerize_app:
+validate_implementation:
   description: >
-    Create Docker containers and deployment infrastructure:
-    - Multi-stage Dockerfile for Java server with JRE, optimized layers, health checks.
-    - JavaFX client container (if needed) or standalone JAR packaging.
-    - docker-compose.yml for local development with database and server.
-    - Deployment scripts and environment configuration.
+    **QUALITY GATE: COMPREHENSIVE IMPLEMENTATION VALIDATION**
+    
+    Conduct thorough validation of complete system implementation:
+    
+    **Functional Requirements Validation:**
+    - Systematic verification that all requirements are implemented correctly
+    - User workflow testing with realistic scenarios and edge cases
+    - Feature completeness audit against original specifications
+    - Performance validation against defined criteria and benchmarks
+    - Error handling verification for all failure scenarios
+    - Data integrity and consistency validation across components
+    
+    **Code Quality Assessment:**
+    - Code review against established standards and best practices
+    - Architecture adherence and design pattern consistency
+    - Security implementation review and vulnerability assessment
+    - Performance optimization opportunities and recommendations
+    - Technical debt analysis and maintainability scoring
+    - Documentation completeness and accuracy validation
+    
+    **System Integration Validation:**
+    - Component integration testing and API contract verification
+    - Database operations and transaction integrity validation
+    - Real-time messaging reliability and performance testing
+    - Cross-platform compatibility verification and testing
+    - Network resilience and failure recovery validation
+    - Security controls effectiveness and compliance verification
+    
+    **Production Readiness Assessment:**
+    - Build and deployment process validation
+    - Configuration management and environment setup verification
+    - Monitoring and logging implementation effectiveness
+    - Backup and recovery procedures testing
+    - Performance under load and scalability validation
+    - Security controls and compliance requirements verification
+    
+    **Quality Metrics Validation:**
+    - Test coverage analysis and gap identification
+    - Performance benchmarks comparison against requirements
+    - Security audit results and remediation verification
+    - User acceptance testing results and feedback incorporation
+    - Accessibility compliance validation and testing
+    - Documentation quality and completeness assessment
+    
+    **CRITICAL DECISION POINT:** This task must provide a clear GO/NO-GO decision for production deployment.
+
   expected_output: >
-    Dockerfiles, docker-compose.yml, deployment scripts, and CONTAINER_README.md with run instructions.
+    **IMPLEMENTATION_REVIEW.md** containing:
+    - Comprehensive functionality validation matrix with pass/fail status
+    - Detailed code quality metrics and assessment scores
+    - System integration testing results with performance benchmarks
+    - Security audit findings and compliance verification
+    - Production readiness checklist with deployment validation
+    - Quality metrics dashboard with trend analysis
+    - **DECISION: GO/NO-GO for production deployment with detailed conditions**
+    - Prioritized action items for any identified issues
+    - Risk assessment and mitigation strategies for deployment
+    - Stakeholder approval requirements and sign-off criteria
+
+  agent: quality_assurance_agent
+
+create_deployment_package:
+  description: >
+    **PHASE 6: DEPLOYMENT AUTOMATION & PACKAGING**
+    
+    Create production-ready deployment infrastructure and distribution packages:
+    
+    **Containerization Strategy:**
+    - Multi-stage Docker builds for Java server with optimized layers
+    - Security-hardened base images with vulnerability scanning
+    - Docker Compose configuration for local development and testing
+    - Kubernetes manifests for scalable production deployment
+    - Container registry setup and image versioning strategy
+    - Health checks, resource limits, and monitoring integration
+    
+    **Application Packaging:**
+    - Server JAR packaging with embedded dependencies and configuration
+    - JavaFX client native installers for Windows (MSI), macOS (DMG), Linux (DEB/RPM)
+    - Code signing and notarization setup for trusted distribution
+    - Automated packaging pipeline with version management
+    - Distribution package testing and validation
+    - Update mechanism and version migration handling
+    
+    **CI/CD Pipeline Implementation:**
+    - Automated build pipeline with multi-stage validation
+    - Test automation integration with quality gates
+    - Security scanning and vulnerability assessment automation
+    - Environment-specific configuration management
+    - Deployment automation with rollback capabilities
+    - Release management and version tagging strategy
+    
+    **Infrastructure as Code:**
+    - Environment provisioning scripts and configuration
+    - Database setup and migration automation
+    - Load balancer and reverse proxy configuration
+    - SSL/TLS certificate management and renewal
+    - Monitoring and logging infrastructure setup
+    - Backup and disaster recovery automation
+    
+    **Deployment Documentation:**
+    - Installation and setup guides for different environments
+    - Configuration management and environment variables documentation
+    - Troubleshooting guides and common issue resolution
+    - Monitoring and maintenance procedures
+    - Security hardening checklist and compliance guidelines
+    - Capacity planning and scaling recommendations
+
+  expected_output: >
+    **DEPLOYMENT_GUIDE.md** with comprehensive deployment documentation
+    
+    **Plus complete deployment package:**
+    - Production-ready Docker images with security scanning reports
+    - Native application installers for all target platforms
+    - CI/CD pipeline configuration with automated testing and deployment
+    - Infrastructure as Code templates (Terraform, CloudFormation, etc.)
+    - Environment-specific configuration templates and examples
+    - Monitoring and alerting configuration with dashboards
+    - Automated backup and recovery scripts with testing procedures
+    - Security hardening guides and compliance checklists
+    - Capacity planning spreadsheets and scaling guidelines
+    - Complete operations runbook with incident response procedures
+
   agent: devops_engineer
 
-evaluate_and_feedback:
+final_project_evaluation:
   description: >
-    Analyze the entire project delivery and provide feedback for model improvement:
-    - Code quality metrics: test coverage, complexity, maintainability scores.
-    - Performance analysis: build times, runtime performance, resource usage.
-    - Architecture review: adherence to design, scalability, security considerations.
-    - Generate feedback report with specific improvement recommendations.
-  expected_output: >
-    EVALUATION_REPORT.md with metrics, analysis, and actionable feedback for future iterations.
-  agent: evaluation_analyst
+    **FINAL PHASE: PROJECT COMPLETION & EVALUATION**
+    
+    Conduct comprehensive project assessment and prepare final deliverables:
+    
+    **Requirements Traceability & Completion:**
+    - Complete requirements traceability matrix with implementation verification
+    - Scope change documentation and impact analysis
+    - Success criteria validation and stakeholder acceptance confirmation
+    - Deferred features documentation with future roadmap planning
+    - Quality metrics achievement analysis against original targets
+    - Performance benchmarks validation and optimization recommendations
+    
+    **Project Deliverables Audit:**
+    - Source code repository organization and documentation completeness
+    - Build and deployment artifacts validation and testing
+    - User documentation and training materials review
+    - Administrative and maintenance procedure documentation
+    - API documentation accuracy and completeness verification
+    - Security documentation and compliance certification
+    
+    **Quality Assessment & Metrics:**
+    - Code quality metrics analysis and technical debt assessment
+    - Test coverage analysis and quality assurance effectiveness
+    - Performance benchmarking results and optimization opportunities
+    - Security audit results and compliance validation
+    - User acceptance testing results and satisfaction metrics
+    - Operational metrics and system reliability assessment
+    
+    **Future Roadmap & Recommendations:**
+    - Feature enhancement opportunities and prioritization
+    - Technical improvement suggestions and modernization opportunities
+    - Performance optimization recommendations and capacity planning
+    - Security enhancement suggestions and compliance improvements
+    - Team training needs and knowledge transfer requirements
+    - Technology upgrade path and migration considerations
+    
+    **Project Retrospective & Lessons Learned:**
+    - Project timeline analysis with milestone achievement review
+    - Team performance evaluation and collaboration effectiveness
+    - Process improvement opportunities and methodology refinements
+    - Technology decision review and alternative assessment
+    - Risk management effectiveness and mitigation success analysis
+    - Stakeholder communication and feedback incorporation review
+    
+    **Knowledge Transfer & Handoff:**
+    - Technical documentation completeness and accuracy validation
+    - Team knowledge transfer sessions and documentation
+    - Support procedures and escalation process definition
+    - Monitoring and maintenance handoff to operations team
+    - Training material creation and delivery coordination
+    - Project closure documentation and final approvals
 
-dynamic_features:
-  description: >
-    After ingesting the PDF and producing ARCHITECTURE.md, identify non-critical features (e.g., emojis,
-    message reactions, message search, themes) and plan/assign them dynamically. Create tasks/playbooks
-    for these features and prioritize them for later sprints without blocking the core MVP.
   expected_output: >
-    DYNAMIC_FEATURES.md with prioritized backlog, proposed agents or roles, and task breakdowns.
-  agent: evaluation_analyst
+    **PROJECT_COMPLETION_REPORT.md** containing:
+    - Executive summary with project success metrics and achievements
+    - Complete requirements traceability matrix with verification status
+    - Comprehensive deliverables inventory with quality assessment
+    - Final quality metrics dashboard with trend analysis
+    - Future roadmap with prioritized enhancement opportunities
+    - Detailed lessons learned analysis with process improvement recommendations
+    - Technical debt assessment with remediation timeline
+    - Knowledge transfer completion checklist and handoff procedures
+    - Stakeholder satisfaction survey results and feedback analysis
+    - Project closure documentation with final approvals and sign-offs
 
-package_and_run:
-  description: >
-    Provide end-to-end build and run instructions: start the server, run the client, and validate messaging works.
-    Include packaging steps for distribution and notes for macOS codesign if applicable.
-  expected_output: >
-    BUILD_AND_RUN.md with exact Maven commands and any required environment variables.
-  agent: devops_engineer
+  agent: quality_assurance_agent
